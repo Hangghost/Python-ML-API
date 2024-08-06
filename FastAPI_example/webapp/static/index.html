@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Boostswatch: Darkly</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css">
+        <style>
+            body {
+                margin-top: 20px;
+            }
+            .container {
+                height: 100%;
+            }
+            .container{
+                display: table;
+                vertical-align: middle;
+            }
+            .vertical-center-row {
+                display: table-cell;
+                vertical-align: middle;
+            }
+            img {
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row vertical-center-row">
+                <div class="col-md-6 offset-md-3">
+                    <h1 class="text-center">Upload an image</h1>
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <div class="form-group
+                        <input type="file" name="file" class="form-control-file" id="file">
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Upload</button>
+                    </form>
+                    <div class="mt-3">
+                        <img id="output" class="img-fluid" src="" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const form = document.getElementById('upload-form');
+            const fileInput = document.getElementById('file');
+            const image = document.getElementById('output');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                image.src = URL.createObjectURL(fileInput.files[0]);
+                alert(data.prediction);
+            });
+        </script>
+    </body>
+</html>
